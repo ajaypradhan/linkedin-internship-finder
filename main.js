@@ -1,5 +1,7 @@
 const puppeteer = require("puppeteer");
 const fs = require("fs");
+const cheerio = require("cheerio");
+const request = require("request");
 
 let inputArr = process.argv.slice(2);
 console.log(inputArr);
@@ -48,7 +50,7 @@ console.log(inputArr);
   // let internBtn = ckBtn[25];
   // await internBtn.click();
   await tab.click(
-    "#artdeco-hoverable-artdeco-gen-53 > div.artdeco-hoverable-content__shell > div > form > fieldset > div.pl4.pr6 > ul > li:nth-child(6) > label"
+    "#artdeco-hoverable-artdeco-gen-53 > div.artdeco-hoverable-content__shell > div > form > fieldset > div.pl4.pr6 > ul > li:nth-child(6)"
   );
   await jobType.click();
 
@@ -72,9 +74,28 @@ async function getInternshipData(browser, tab) {
     allInternshipLinks.push(internLink);
   }
 
-  for (let i = 0; i < 10; i++) {
-    console.log(i+1);
-    console.log(allInternshipLinks[i]);
+  for (let i = 0; i < 10; i = i + 2) {
+    let iLink = allInternshipLinks[i];
+    let newTab = await browser.newPage();
+    await getInternshipDataOf1(newTab, iLink);
   }
 }
 
+async function getInternshipDataOf1(newTab, iLink) {
+  await newTab.goto(iLink);
+  await newTab.waitForTimeout(2000);
+  getMatchDetails(iLink);
+  await newTab.waitForTimeout(2000);
+  await newTab.close();
+}
+
+function getMatchDetails(iLink) {
+  request(iLink, function (err, res, data) {
+    processData(data);
+  })
+}
+
+function processData(htmlOfWebsite) {
+  let myDocument = cheerio.load(htmlOfWebsite + "");
+  console.log(myDocument);
+}
