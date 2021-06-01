@@ -2,10 +2,12 @@ const puppeteer = require("puppeteer");
 const fs = require("fs");
 const cheerio = require("cheerio");
 const request = require("request");
-
+// emial = "tavaxi2835@pidhoes.com"
+// pass = "SVajay@02"
 let inputArr = process.argv.slice(2);
 console.log(inputArr);
 
+let data = {};
 (async function () {
   let browser = await puppeteer.launch({
     headless: false,
@@ -20,7 +22,7 @@ console.log(inputArr);
   await tab.click(".sign-in-form__submit-button");
   await tab.waitForSelector("#global-nav-search", { visible: true });
   await tab.click("#global-nav-search");
-  await tab.type("#global-nav-search", "Frontend Developer");
+  await tab.type("#global-nav-search", "Frontend Developer in jobs");
   await tab.keyboard.press("Enter");
   await tab.waitForSelector(
     ".search-results__cluster-bottom-banner.artdeco-button.artdeco-button--tertiary.artdeco-button--muted",
@@ -50,7 +52,7 @@ console.log(inputArr);
   // let internBtn = ckBtn[25];
   // await internBtn.click();
   await tab.click(
-    "#artdeco-hoverable-artdeco-gen-53 > div.artdeco-hoverable-content__shell > div > form > fieldset > div.pl4.pr6 > ul > li:nth-child(6)"
+    "#artdeco-hoverable-artdeco-gen-56 > div.artdeco-hoverable-content__shell > div > form > fieldset > div.pl4.pr6 > ul > li:nth-child(6) > label"
   );
   await jobType.click();
 
@@ -84,18 +86,18 @@ async function getInternshipData(browser, tab) {
 async function getInternshipDataOf1(newTab, iLink) {
   await newTab.goto(iLink);
   await newTab.waitForTimeout(2000);
-  getMatchDetails(iLink);
+  for()
   await newTab.waitForTimeout(2000);
   await newTab.close();
 }
 
-function getMatchDetails(iLink) {
-  request(iLink, function (err, res, data) {
-    processData(data);
-  })
-}
+// function getMatchDetails(iLink) {
+//   request(iLink, function (err, res, data) {
+//     processData(data);
+//   })
+// }
 
-function processData(htmlOfWebsite) {
-  let myDocument = cheerio.load(htmlOfWebsite + "");
-  console.log(myDocument);
-}
+// function processData(htmlOfWebsite) {
+//   let myDocument = cheerio.load(htmlOfWebsite + "");
+//   console.log(myDocument);
+// }
