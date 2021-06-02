@@ -2,12 +2,19 @@ const puppeteer = require("puppeteer");
 const fs = require("fs");
 const cheerio = require("cheerio");
 const request = require("request");
+const { head } = require("request");
 // emial = "tavaxi2835@pidhoes.com"
 // pass = "SVajay@02"
 let inputArr = process.argv.slice(2);
 console.log(inputArr);
 
-let data = {};
+let allDetails = [
+  {
+    name: "ajay",
+    na: "askdakd",
+  },
+];
+
 (async function () {
   let browser = await puppeteer.launch({
     headless: false,
@@ -81,23 +88,22 @@ async function getInternshipData(browser, tab) {
     let newTab = await browser.newPage();
     await getInternshipDataOf1(newTab, iLink);
   }
+  console.log(allDetails);
 }
 
 async function getInternshipDataOf1(newTab, iLink) {
   await newTab.goto(iLink);
   await newTab.waitForTimeout(2000);
-  for()
+  let imgData = await newTab.$(
+    ".lazy-image.ember-view.EntityPhoto-square-3.mb3"
+  );
+  let imgLink = await newTab.evaluate(function (elem) {
+    return elem.getAttribute("src");
+  }, imgData);
+  // console.log(imgLink);
+  let dataOf1 = { imgSrc: imgLink, name: "Frontend Developer" };
+  allDetails.push(dataOf1);
   await newTab.waitForTimeout(2000);
   await newTab.close();
 }
 
-// function getMatchDetails(iLink) {
-//   request(iLink, function (err, res, data) {
-//     processData(data);
-//   })
-// }
-
-// function processData(htmlOfWebsite) {
-//   let myDocument = cheerio.load(htmlOfWebsite + "");
-//   console.log(myDocument);
-// }
