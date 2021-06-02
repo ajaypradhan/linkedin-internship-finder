@@ -1,8 +1,7 @@
 const puppeteer = require("puppeteer");
 const fs = require("fs");
 
-// emial = "tavaxi2835@pidhoes.com"
-// pass = "SVajay@02"
+
 
 let inputArr = process.argv.slice(2);
 console.log(inputArr);
@@ -26,7 +25,7 @@ let allDetails = [];
 
   await tab.waitForSelector("#global-nav-search", { visible: true });
   await tab.click("#global-nav-search");
-  await tab.type("#global-nav-search", "Frontend Developer in jobs");
+  await tab.type("#global-nav-search", inputArr[2] +" in jobs");
   await tab.keyboard.press("Enter");
 
   await tab.waitForSelector(
@@ -57,7 +56,7 @@ let allDetails = [];
   // let internBtn = ckBtn[25];
   // await internBtn.click();
   await tab.click(
-    "#artdeco-hoverable-artdeco-gen-56 > div.artdeco-hoverable-content__shell > div > form > fieldset > div.pl4.pr6 > ul > li:nth-child(6) > label"
+    "#artdeco-hoverable-artdeco-gen-53 > div.artdeco-hoverable-content__shell > div > form > fieldset > div.pl4.pr6 > ul > li:nth-child(6) > label"
   );
   await jobType.click();
 
@@ -88,12 +87,14 @@ async function getInternshipData(browser, tab) {
   }
   // console.log(allDetails);
 
-  // let resultTab = await browser.newPage();
-  // await resultTab.goto("file:///E:/linked_internship_finder/index.html");
   let allData = JSON.stringify(allDetails);
   fs.writeFile("allData.json", allData, function () {
     console.log("all data added");
   });
+
+  let resultTab = await browser.newPage();
+  await resultTab.goto("file:///E:/linked_internship_finder/index.html");
+  await resultTab.goto("http://127.0.0.1:5500/index.html");
 }
 
 async function getInternshipDataOf1(newTab, iLink) {
@@ -130,6 +131,7 @@ async function getInternshipDataOf1(newTab, iLink) {
     cName: compName,
     cLoc: compLoc,
     imgSrc: imgLink,
+    link: iLink,
   };
   allDetails.push(dataOf1);
   await newTab.waitForTimeout(2000);
