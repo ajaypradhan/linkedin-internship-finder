@@ -1,18 +1,13 @@
 const puppeteer = require("puppeteer");
+const fs = require("fs");
 
 // emial = "tavaxi2835@pidhoes.com"
 // pass = "SVajay@02"
 
-
 let inputArr = process.argv.slice(2);
 console.log(inputArr);
 
-let allDetails = [
-  {
-    name: "ajay",
-    na: "askdakd",
-  },
-];
+let allDetails = [];
 
 (async function () {
   let browser = await puppeteer.launch({
@@ -20,7 +15,6 @@ let allDetails = [
     defaultViewport: null,
     args: ["--start-maximized"],
   });
-
 
   let pages = await browser.pages();
   let tab = pages[0];
@@ -71,7 +65,6 @@ let allDetails = [
   await getInternshipData(browser, tab);
 })();
 
-
 async function getInternshipData(browser, tab) {
   await tab.waitForSelector(".disabled.ember-view.job-card-container__link", {
     visible: true,
@@ -95,9 +88,12 @@ async function getInternshipData(browser, tab) {
   }
   // console.log(allDetails);
 
-  let resultTab = await browser.newPage();
-  await resultTab.goto("file:///E:/linked_internship_finder/index.html");
-
+  // let resultTab = await browser.newPage();
+  // await resultTab.goto("file:///E:/linked_internship_finder/index.html");
+  let allData = JSON.stringify(allDetails);
+  fs.writeFile("allData.json", allData, function () {
+    console.log("all data added");
+  });
 }
 
 async function getInternshipDataOf1(newTab, iLink) {
@@ -115,19 +111,19 @@ async function getInternshipDataOf1(newTab, iLink) {
   let h1InnerData = await newTab.evaluate(function (elem) {
     return elem.innerText;
   }, h1Data);
-  console.log(h1InnerData);
+  // console.log(h1InnerData);
 
   let compData1 = await newTab.$(".ember-view.t-black.t-normal");
   let compName = await newTab.evaluate(function (elem) {
     return elem.innerText;
   }, compData1);
-  console.log(compName);
+  // console.log(compName);
 
   let compData2 = await newTab.$(".jobs-unified-top-card__bullet");
   let compLoc = await newTab.evaluate(function (elem) {
     return elem.innerText;
   }, compData2);
-  console.log(compLoc);
+  // console.log(compLoc);
 
   let dataOf1 = {
     title: h1InnerData,
