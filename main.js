@@ -94,16 +94,39 @@ async function getInternshipData(browser, tab) {
 async function getInternshipDataOf1(newTab, iLink) {
   await newTab.goto(iLink);
   await newTab.waitForTimeout(2000);
+
   let imgData = await newTab.$(
     ".lazy-image.ember-view.EntityPhoto-square-3.mb3"
   );
   let imgLink = await newTab.evaluate(function (elem) {
     return elem.getAttribute("src");
   }, imgData);
-  // console.log(imgLink);
-  let dataOf1 = { imgSrc: imgLink, name: "Frontend Developer" };
+
+  let h1Data = await newTab.$(".t-24.t-bold");
+  let h1InnerData = await newTab.evaluate(function (elem) {
+    return elem.innerText;
+  }, h1Data);
+  console.log(h1InnerData);
+
+  let compData1 = await newTab.$(".ember-view.t-black.t-normal");
+  let compName = await newTab.evaluate(function (elem) {
+    return elem.innerText;
+  }, compData1);
+  console.log(compName);
+
+  let compData2 = await newTab.$(".jobs-unified-top-card__bullet");
+  let compLoc = await newTab.evaluate(function (elem) {
+    return elem.innerText;
+  }, compData2);
+  console.log(compLoc);
+
+  let dataOf1 = {
+    title: h1InnerData,
+    cName: compName,
+    cLoc: compLoc,
+    imgSrc: imgLink,
+  };
   allDetails.push(dataOf1);
   await newTab.waitForTimeout(2000);
   await newTab.close();
 }
-
