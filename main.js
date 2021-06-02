@@ -1,10 +1,9 @@
 const puppeteer = require("puppeteer");
-const fs = require("fs");
-const cheerio = require("cheerio");
-const request = require("request");
-const { head } = require("request");
+
 // emial = "tavaxi2835@pidhoes.com"
 // pass = "SVajay@02"
+
+
 let inputArr = process.argv.slice(2);
 console.log(inputArr);
 
@@ -21,16 +20,21 @@ let allDetails = [
     defaultViewport: null,
     args: ["--start-maximized"],
   });
+
+
   let pages = await browser.pages();
   let tab = pages[0];
   await tab.goto("https://www.linkedin.com/");
+
   await tab.type("#session_key", inputArr[0]);
   await tab.type("#session_password", inputArr[1]);
   await tab.click(".sign-in-form__submit-button");
+
   await tab.waitForSelector("#global-nav-search", { visible: true });
   await tab.click("#global-nav-search");
   await tab.type("#global-nav-search", "Frontend Developer in jobs");
   await tab.keyboard.press("Enter");
+
   await tab.waitForSelector(
     ".search-results__cluster-bottom-banner.artdeco-button.artdeco-button--tertiary.artdeco-button--muted",
     { visible: true }
@@ -67,6 +71,7 @@ let allDetails = [
   await getInternshipData(browser, tab);
 })();
 
+
 async function getInternshipData(browser, tab) {
   await tab.waitForSelector(".disabled.ember-view.job-card-container__link", {
     visible: true,
@@ -88,7 +93,11 @@ async function getInternshipData(browser, tab) {
     let newTab = await browser.newPage();
     await getInternshipDataOf1(newTab, iLink);
   }
-  console.log(allDetails);
+  // console.log(allDetails);
+
+  let resultTab = await browser.newPage();
+  await resultTab.goto("file:///E:/linked_internship_finder/index.html");
+
 }
 
 async function getInternshipDataOf1(newTab, iLink) {
